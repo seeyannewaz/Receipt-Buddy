@@ -1,0 +1,128 @@
+<!-- ===================== RECEIPTS PAGE ===================== -->
+<div class="section-head">
+  <div>
+    <div class="section-title">Receipts</div>
+    <div class="section-sub">Browse receipts by month • open details in a new window</div>
+  </div>
+
+  <div class="head-actions">
+    <button mat-stroked-button (click)="refresh()" [disabled]="loading()">
+      <mat-icon>refresh</mat-icon>
+      Refresh
+    </button>
+
+    <button mat-stroked-button (click)="deleteAllReceipts()" [disabled]="loading() || receipts().length === 0">
+      <mat-icon>delete_forever</mat-icon>
+      Delete All
+    </button>
+  </div>
+</div>
+
+<!-- Month filter panel -->
+<div class="panel filter-panel" *ngIf="!loading() && receipts().length">
+  <div class="filter-left">
+    <div class="filter-title">Month</div>
+    <div class="filter-sub muted">Select a month to view receipts</div>
+  </div>
+
+  <div class="filter-right">
+    <button mat-stroked-button (click)="prevMonth()" [disabled]="availableMonths().length === 0"
+      aria-label="Previous month">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+
+    <select class="month-select" [value]="selectedMonthKey()" (change)="selectMonth(($any($event.target)).value)"
+      [disabled]="availableMonths().length === 0" aria-label="Select month">
+      <option *ngFor="let m of availableMonths()" [value]="m.key">
+        {{ m.label }} ({{ m.count }})
+      </option>
+    </select>
+
+    <button mat-stroked-button (click)="nextMonth()"
+      [disabled]="availableMonths().length === 0 || isNextMonthDisabled()" aria-label="Next month">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+</div>
+
+<!-- Loading / error -->
+<div class="panel" *ngIf="loading()">
+  <div class="empty">Loading receipts…</div>
+</div>
+
+<div class="panel" *ngIf="!loading() && error()">
+  <div class="empty">{{ error() }}</div>
+</div>
+
+<!-- Table -->
+<div class="panel" *ngIf="!loading() && monthlyReceipts().length">
+  <div class="panel-head">
+    <div>
+      <div class="panel-title">Receipts for {{ selectedMonthLabel() }}</div>
+    </div>
+    <div class="pill strong">{{ monthlyReceipts().length }} receipts</div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="table table-even">
+      <colgroup>
+        <col class="col-id" />
+        <col class="col-status" />
+        <col class="col-merchant" />
+        <col class="col-date" />
+        <col class="col-total" />
+        <col class="col-actions" />
+      </colgroup>
+
+      <thead>
+        <tr>
+          <th>Receipt No</th>
+          <th>Status</th>
+          <th>Merchant</th>
+          <th>Date</th>
+          <th>Total</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let r of monthlyReceipts(); let i = index">
+          <td>
+            {{ receiptNumberFor(monthlyReceipts(), i) }}
+          </td>
+
+          <td>
+            <span [class]="badgeClass(r.status)">{{ r.status }}</span>
+          </td>
+
+          <td class="cell-merchant">{{ r.merchantRaw ?? '—' }}</td>
+
+          <td>{{ displayDate(r) }}</td>
+
+          <td class="strong">{{ (r.total ?? 0) | currency:'USD' }}</td>
+
+          <td class="actions-col">
+            <button mat-stroked-button (click)="openReceipt(r)">
+              <mat-icon>open_in_new</mat-icon>
+              Details
+            </button>
+
+            <button mat-stroked-button (click)="deleteReceipt(r.id)">
+              <mat-icon>delete</mat-icon>
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Empty states -->
+<div class="panel" *ngIf="!loading() && receipts().length && monthlyReceipts().length === 0">
+  <div class="empty">No receipts in {{ selectedMonthLabel() }}.</div>
+</div>
+
+<div class="panel" *ngIf="!loading() && !receipts().length">
+  <div class="empty">No receipts yet. Go to Upload.</div>
+</div>

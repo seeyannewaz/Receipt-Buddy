@@ -1,0 +1,307 @@
+/* ===================== COOL GLASS THEME (Receipts) ===================== */
+:host {
+    display: block;
+    padding: 6px 2px 22px;
+    color: rgba(15, 23, 42, 0.92);
+    position: relative;
+}
+
+/* soft gradient blobs */
+:host::before {
+    content: "";
+    position: absolute;
+    inset: -40px -20px -40px -20px;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        radial-gradient(700px 320px at 10% 5%, rgba(99, 102, 241, 0.18), transparent 60%),
+        radial-gradient(680px 340px at 92% 12%, rgba(34, 211, 238, 0.16), transparent 55%),
+        radial-gradient(760px 420px at 55% 92%, rgba(34, 197, 94, 0.12), transparent 58%);
+    filter: saturate(1.05);
+}
+
+.muted {
+    opacity: .72;
+    font-size: 12px;
+}
+
+.strong {
+    font-weight: 900;
+}
+
+/* ===================== MATERIAL BUTTONS (NO CUSTOM .btn) ===================== */
+:host ::ng-deep button[mat-stroked-button] {
+    border-radius: 999px !important;
+    font-weight: 900 !important;
+    transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+
+:host ::ng-deep button[mat-stroked-button]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(2, 6, 23, 0.10);
+    background: rgba(2, 6, 23, 0.04);
+}
+
+/* ===================== HEADER ===================== */
+.section-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 10px 0 14px;
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(15, 23, 42, 0.10);
+    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.80);
+    backdrop-filter: blur(10px);
+}
+
+.section-title {
+    font-weight: 950;
+    font-size: 18px;
+    letter-spacing: .2px;
+}
+
+.section-sub {
+    opacity: .75;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.head-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* ===================== GLASS PANELS ===================== */
+.panel {
+    border-radius: 20px;
+    padding: 18px;
+    margin-bottom: 14px;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(15, 23, 42, 0.10);
+    box-shadow: 0 14px 40px rgba(2, 6, 23, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+    transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease;
+}
+
+.panel::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0.85), rgba(34, 211, 238, 0.75), rgba(34, 197, 94, 0.70));
+}
+
+.panel:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 60px rgba(2, 6, 23, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.90);
+    border-color: rgba(15, 23, 42, 0.14);
+}
+
+.panel-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.panel-title {
+    font-weight: 900;
+    font-size: 16px;
+}
+
+.panel-sub {
+    opacity: .72;
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+.empty {
+    opacity: .75;
+    padding: 8px 0;
+}
+
+/* ===================== FILTER BAR ===================== */
+.filter-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.filter-left {
+    display: grid;
+    gap: 2px;
+}
+
+.filter-title {
+    font-weight: 950;
+}
+
+.filter-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.month-select {
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(15, 23, 42, 0.14);
+    background: rgba(255, 255, 255, 0.70);
+    font-weight: 800;
+    outline: none;
+}
+
+.month-select:focus {
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.18);
+}
+
+/* pill */
+.pill {
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(2, 6, 23, 0.04);
+    border: 1px solid rgba(15, 23, 42, 0.10);
+    font-weight: 900;
+    font-size: 12px;
+}
+
+/* ===================== TABLE ===================== */
+.table-wrap {
+    max-height: 420px;
+    overflow: auto;
+    border: 1px solid rgba(15, 23, 42, 0.10);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.65);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+}
+
+.table th,
+.table td {
+    padding: 12px 12px;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    text-align: center;
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Even-ish columns */
+.table-even .col-id {
+    width: 10%;
+}
+
+.table-even .col-status {
+    width: 14%;
+}
+
+.table-even .col-merchant {
+    width: 26%;
+}
+
+.table-even .col-date {
+    width: 16%;
+}
+
+.table-even .col-total {
+    width: 14%;
+}
+
+.table-even .col-actions {
+    width: 20%;
+}
+
+.cell-merchant {
+    text-align: left;
+}
+
+/* actions: Material buttons */
+.actions-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.actions-col button[mat-stroked-button] {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+}
+
+/* clickable ID */
+.id-link {
+    font-weight: 950;
+    text-decoration: none;
+    color: rgba(99, 102, 241, 0.95);
+}
+
+.id-link:hover {
+    text-decoration: underline;
+}
+
+/* ===================== BADGES ===================== */
+.badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-weight: 950;
+    font-size: 12px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+}
+
+.badge.ok {
+    background: rgba(34, 197, 94, 0.14);
+    color: rgba(15, 23, 42, 0.92);
+}
+
+.badge.warn {
+    background: rgba(245, 158, 11, 0.16);
+    color: rgba(15, 23, 42, 0.92);
+}
+
+.badge.bad {
+    background: rgba(239, 68, 68, 0.14);
+    color: rgba(15, 23, 42, 0.92);
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 900px) {
+    .section-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .filter-panel {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .table {
+        min-width: 760px;
+    }
+}

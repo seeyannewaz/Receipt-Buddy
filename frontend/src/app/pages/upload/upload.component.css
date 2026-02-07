@@ -1,0 +1,423 @@
+:host {
+    display: block;
+    position: relative;
+    padding: 10px 2px 24px;
+    color: rgba(15, 23, 42, 0.92);
+}
+
+/* Same soft gradient blobs as dashboard */
+:host::before {
+    content: "";
+    position: absolute;
+    inset: -40px -20px -40px -20px;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        radial-gradient(700px 320px at 12% 6%, rgba(99, 102, 241, 0.18), transparent 60%),
+        radial-gradient(680px 340px at 92% 12%, rgba(34, 211, 238, 0.16), transparent 55%),
+        radial-gradient(760px 420px at 55% 92%, rgba(34, 197, 94, 0.12), transparent 58%);
+}
+
+.upload-shell {
+    display: grid;
+    gap: 16px;
+}
+
+/* ===================== HERO ===================== */
+.hero {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 16px;
+    padding: 16px;
+
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(15, 23, 42, 0.10);
+    box-shadow:
+        0 14px 40px rgba(2, 6, 23, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0.85), rgba(34, 211, 238, 0.75), rgba(34, 197, 94, 0.70));
+}
+
+.hero-title {
+    font-weight: 950;
+    font-size: 22px;
+    letter-spacing: .2px;
+}
+
+.hero-sub {
+    margin-top: 6px;
+    opacity: .78;
+    font-size: 13px;
+    max-width: 56ch;
+}
+
+.hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+}
+
+.file-input {
+    display: none;
+}
+
+.btn {
+    border: 0;
+    border-radius: 999px;
+    padding: 10px 14px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: transform .12s ease, box-shadow .12s ease, background .12s ease, opacity .12s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 26px rgba(2, 6, 23, 0.12);
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0.95), rgba(34, 211, 238, 0.92));
+    color: white;
+}
+
+.btn-ghost {
+    background: rgba(2, 6, 23, 0.04);
+    color: rgba(15, 23, 42, 0.92);
+}
+
+.icon {
+    display: inline-grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.status-row {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pill {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 900;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: rgba(2, 6, 23, 0.03);
+}
+
+.pill.ok {
+    background: rgba(34, 197, 94, 0.14);
+}
+
+.muted {
+    opacity: .75;
+    font-size: 12px;
+}
+
+/* ===================== PREVIEW ===================== */
+.preview-card {
+    border-radius: 18px;
+    border: 1px solid rgba(15, 23, 42, 0.10);
+    background:
+        linear-gradient(180deg, rgba(2, 6, 23, 0.02), rgba(2, 6, 23, 0.00));
+    height: 220px;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+}
+
+.preview-empty-state {
+    text-align: center;
+    padding: 12px;
+}
+
+.preview-icon {
+    font-size: 34px;
+}
+
+.preview-title {
+    font-weight: 950;
+    margin-top: 6px;
+}
+
+.preview-sub {
+    opacity: .72;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ===================== DROPZONE ===================== */
+.dropzone {
+    border-radius: 20px;
+    padding: 18px;
+    border: 1px dashed rgba(15, 23, 42, 0.22);
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow:
+        0 14px 40px rgba(2, 6, 23, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.80);
+    backdrop-filter: blur(10px);
+    transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+}
+
+.dropzone:hover {
+    transform: translateY(-1px);
+    box-shadow:
+        0 18px 55px rgba(2, 6, 23, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 0.88);
+}
+
+.dropzone-active {
+    border-color: rgba(34, 211, 238, 0.80);
+    box-shadow:
+        0 22px 70px rgba(34, 211, 238, 0.14),
+        inset 0 1px 0 rgba(255, 255, 255, 0.90);
+    transform: translateY(-2px);
+}
+
+.dropzone-disabled {
+    opacity: .7;
+    pointer-events: none;
+}
+
+.dropzone-inner {
+    text-align: center;
+    padding: 6px 10px 10px;
+}
+
+.dropzone-badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 950;
+    font-size: 12px;
+    color: rgba(15, 23, 42, 0.92);
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: rgba(2, 6, 23, 0.03);
+}
+
+.dropzone-title {
+    margin-top: 10px;
+    font-weight: 950;
+    font-size: 16px;
+}
+
+.dropzone-sub {
+    margin-top: 6px;
+    opacity: .75;
+    font-size: 12px;
+}
+
+.dropzone-hint {
+    margin-top: 14px;
+    display: grid;
+    gap: 8px;
+}
+
+/* Fake progress (nice feel without wiring real percent) */
+.fake-progress {
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(2, 6, 23, 0.06);
+    overflow: hidden;
+}
+
+.fake-progress-bar {
+    height: 100%;
+    width: 45%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0.95), rgba(34, 211, 238, 0.92), rgba(34, 197, 94, 0.85));
+    animation: slide 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes slide {
+    from {
+        transform: translateX(-35%);
+    }
+
+    to {
+        transform: translateX(135%);
+    }
+}
+
+/* ===================== RESULT CARD ===================== */
+.result-card,
+.message-card {
+    border-radius: 20px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(15, 23, 42, 0.10);
+    box-shadow:
+        0 14px 40px rgba(2, 6, 23, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.result-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, rgba(249, 115, 22, 0.75), rgba(236, 72, 153, 0.70), rgba(99, 102, 241, 0.75));
+}
+
+.result-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.result-title {
+    font-weight: 950;
+    font-size: 16px;
+}
+
+.result-sub {
+    opacity: .72;
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+.result-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* badgeClass likely returns "badge ok/warn/bad" */
+.badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-weight: 950;
+    font-size: 12px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: rgba(2, 6, 23, 0.03);
+}
+
+.badge.ok {
+    background: rgba(34, 197, 94, 0.14);
+}
+
+.badge.warn {
+    background: rgba(245, 158, 11, 0.16);
+}
+
+.badge.bad {
+    background: rgba(239, 68, 68, 0.14);
+}
+
+.link {
+    font-weight: 950;
+    text-decoration: none;
+    color: rgba(99, 102, 241, 0.95);
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
+.result-body {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.mini {
+    border-radius: 16px;
+    padding: 12px;
+    background: rgba(2, 6, 23, 0.03);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.mini-label {
+    opacity: .70;
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.mini-value {
+    margin-top: 6px;
+    font-weight: 800;
+    font-size: 13px;
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 960px) {
+    .hero {
+        grid-template-columns: 1fr;
+    }
+
+    .preview-card {
+        height: 260px;
+    }
+
+    .result-body {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 520px) {
+    .preview-card {
+        height: 220px;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .preview-link {
+        display: block;
+        border-radius: inherit;
+    }
+
+    .preview-link:focus-visible {
+        outline: 3px solid rgba(99, 102, 241, 0.35);
+        outline-offset: 4px;
+        border-radius: 16px;
+    }
+
+}

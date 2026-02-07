@@ -1,0 +1,322 @@
+<!-- ===================== ALL-TIME DASHBOARD ===================== -->
+<div class="section-head">
+  <div>
+    <div class="section-title">All-time overview</div>
+    <div class="section-sub">Your complete receipt history</div>
+  </div>
+  <button mat-stroked-button (click)="refresh()">
+    <mat-icon>refresh</mat-icon> Refresh
+  </button>
+</div>
+
+<div class="grid">
+  <mat-card class="kpi">
+    <div class="kpi-title">Receipts</div>
+    <div class="kpi-value">{{ receiptSummaries().length }}</div>
+    <div class="kpi-sub">Parsed: {{ parsedCountAll() }}</div>
+  </mat-card>
+
+  <mat-card class="kpi">
+    <div class="kpi-title">Total Spend</div>
+    <div class="kpi-value">${{ totalSpendAll() | number:'1.2-2' }}</div>
+    <div class="kpi-sub">Only counts receipts with a total</div>
+  </mat-card>
+
+  <mat-card class="kpi">
+    <div class="kpi-title">Top Merchant</div>
+    <div class="kpi-value">{{ topMerchantAll() ?? '—' }}</div>
+    <div class="kpi-sub">by receipt count</div>
+  </mat-card>
+
+  <!-- ===== All-time merchant breakdown card (click merchant -> drilldown) ===== -->
+  <mat-card class="panel">
+    <div class="panel-head">
+      <div>
+        <div class="panel-title">
+          Merchant breakdown
+          <span *ngIf="selectedMerchantAll() !== null" class="muted">
+            • {{ selectedMerchantAll() }}
+          </span>
+        </div>
+        <div class="panel-sub" *ngIf="selectedMerchantAll() === null">Click a merchant to drill down</div>
+        <div class="panel-sub" *ngIf="selectedMerchantAll() !== null">
+          Showing receipts for this merchant (all-time)
+        </div>
+      </div>
+
+      <div class="hint">
+        <button *ngIf="selectedMerchantAll() !== null" mat-stroked-button (click)="clearMerchantAll()">
+          <mat-icon>arrow_back</mat-icon>
+          Back
+        </button>
+      </div>
+    </div>
+
+    <!-- Summary list -->
+    <ng-container *ngIf="selectedMerchantAll() === null">
+      <div *ngIf="merchantCountsAll().length === 0" class="empty">No data yet. Upload a receipt.</div>
+
+      <div *ngIf="merchantCountsAll().length > 0" class="merchant-scroll">
+        <div *ngFor="let m of merchantCountsAll()" class="row">
+          <div class="row-left">
+            <button mat-stroked-button class="merchant-btn" (click)="selectMerchantAll(m.name)">
+              {{ m.name }}
+            </button>
+            <span class="muted">{{ m.count }} receipts</span>
+          </div>
+          <mat-progress-bar [value]="(m.count / maxMerchantCountAll()) * 100"></mat-progress-bar>
+        </div>
+      </div>
+    </ng-container>
+
+
+    <!-- Drilldown table -->
+    <ng-container *ngIf="selectedMerchantAll() !== null">
+      <div *ngIf="merchantReceiptsAll().length === 0" class="empty">
+        No receipts found for this merchant.
+      </div>
+
+      <div *ngIf="merchantReceiptsAll().length > 0" class="table-wrap">
+        <table class="table table-even">
+          <colgroup>
+            <col class="col-id" />
+            <col class="col-status" />
+            <col class="col-date" />
+            <col class="col-total" />
+            <col class="col-actions" />
+          </colgroup>
+
+          <thead>
+            <tr>
+              <th>Receipt No</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Total</th>
+              <th class="actions-col">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let r of merchantReceiptsAll(); let i = index">
+              <td>
+                {{ receiptNumberFor(merchantReceiptsAll(), i) }}
+              </td>
+              <td><span [class]="badgeClass(r.status)">{{ r.status }}</span></td>
+              <td>{{ displayDate(r) }}</td>
+              <td>${{ (r.total ?? 0) | number:'1.2-2' }}</td>
+              <td class="actions-col">
+                <button mat-stroked-button (click)="openReceipt(r.id)">
+                  <mat-icon>open_in_new</mat-icon>
+                  Details
+                </button>
+                <button mat-stroked-button (click)="deleteReceipt(r.id)">
+                  <mat-icon>delete</mat-icon>
+                  Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="muted" style="margin-top:10px;">
+          Showing {{ merchantReceiptsAll().length }} receipts.
+        </div>
+      </div>
+    </ng-container>
+  </mat-card>
+</div>
+
+<mat-divider class="divider"></mat-divider>
+
+<!-- ===================== MONTHLY DASHBOARD ===================== -->
+<div class="section-head">
+  <div>
+    <div class="section-title">Monthly snapshot</div>
+    <div class="section-sub">Stats for {{ monthLabel() }}</div>
+  </div>
+
+  <div class="month-nav">
+    <mat-form-field appearance="outline" class="month-field">
+      <mat-select [value]="selectedMonthKey()" (selectionChange)="setMonthByKey($event.value)">
+        <mat-option *ngFor="let m of monthOptions()" [value]="m.key">
+          {{ m.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+
+<div class="grid">
+  <mat-card class="kpi">
+    <div class="kpi-title">Receipts {{ selectedDay() !== null ? '(Day ' + selectedDay() + ')' : '(month)' }}</div>
+    <div class="kpi-value">{{ monthlyReceiptsFiltered().length }}</div>
+    <div class="kpi-sub">Parsed: {{ parsedCountMonth() }}</div>
+  </mat-card>
+
+  <mat-card class="kpi">
+    <div class="kpi-title">Total Spend {{ selectedDay() !== null ? '(Day ' + selectedDay() + ')' : '(month)' }}</div>
+    <div class="kpi-value">${{ totalSpendMonth() | number:'1.2-2' }}</div>
+    <div class="kpi-sub">Sum of totals</div>
+  </mat-card>
+
+  <mat-card class="kpi">
+    <div class="kpi-title">Top Merchant {{ selectedDay() !== null ? '(Day ' + selectedDay() + ')' : '(month)' }}</div>
+    <div class="kpi-value">{{ topMerchantMonth() ?? '—' }}</div>
+    <div class="kpi-sub">by receipt count</div>
+  </mat-card>
+
+  <!-- Graph -->
+  <mat-card class="panel">
+    <div class="panel-head">
+      <div>
+        <div class="panel-title">Expenses over {{ monthLabel() }}</div>
+        <div class="panel-sub">Daily totals (click a bar to filter stats)</div>
+      </div>
+
+      <div class="hint">
+        <mat-chip *ngIf="selectedDay() !== null">Day {{ selectedDay() }} selected</mat-chip>
+        <button mat-stroked-button *ngIf="selectedDay() !== null" (click)="clearDay()">Clear day</button>
+      </div>
+    </div>
+
+    <div *ngIf="dailySpend().length === 0" class="empty">No receipts for this month.</div>
+
+    <div *ngIf="dailySpend().length > 0" class="chart-wrap" (mousemove)="onChartMouseMove($event)"
+      (mouseleave)="onChartMouseLeave()">
+      <svg class="chart" viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(99,102,241,0.95)"></stop>
+            <stop offset="55%" stop-color="rgba(34,211,238,0.85)"></stop>
+            <stop offset="100%" stop-color="rgba(34,197,94,0.80)"></stop>
+          </linearGradient>
+        </defs>
+
+        <line [attr.x1]="CHART_LEFT" [attr.y1]="CHART_BOTTOM" [attr.x2]="CHART_RIGHT" [attr.y2]="CHART_BOTTOM"
+          stroke="currentColor" opacity="0.20"></line>
+
+        <line [attr.x1]="CHART_LEFT" [attr.y1]="CHART_TOP" [attr.x2]="CHART_LEFT" [attr.y2]="CHART_BOTTOM"
+          stroke="currentColor" opacity="0.20"></line>
+
+        <text [attr.x]="(CHART_LEFT + CHART_RIGHT)/2" [attr.y]="CHART_BOTTOM + 42" text-anchor="middle"
+          class="axis-title">
+          Day of month
+        </text>
+
+        <text [attr.x]="CHART_LEFT - 60" [attr.y]="(CHART_TOP + CHART_BOTTOM)/2" text-anchor="middle" class="axis-title"
+          [attr.transform]="'rotate(-90 ' + (CHART_LEFT - 60) + ' ' + ((CHART_TOP + CHART_BOTTOM)/2) + ')'">
+          Expense ($)
+        </text>
+
+        <ng-container *ngFor="let amt of dailySpend(); let i = index">
+          <rect [attr.x]="barX(i)" [attr.y]="barY(amt)" [attr.width]="barW()" [attr.height]="barH(amt)" rx="6"
+            class="bar" [class.bar-selected]="selectedDay() === (i+1)" (mousemove)="hoverBar(i+1, amt, $event)"
+            (mouseleave)="leaveBar()" (click)="toggleDay(i+1)"></rect>
+
+        </ng-container>
+      </svg>
+
+      <div class="tooltip" *ngIf="hovered() as h" [style.left.px]="tooltipPos().x" [style.top.px]="tooltipPos().y">
+        (expense ${{ h.amount | number:'1.2-2' }}, day {{ h.day }})
+      </div>
+    </div>
+  </mat-card>
+
+  <!-- ===== Monthly merchant breakdown card (click merchant -> drilldown) ===== -->
+  <mat-card class="panel">
+    <div class="panel-head">
+      <div>
+        <div class="panel-title">
+          Merchant breakdown {{ selectedDay() !== null ? '(Day ' + selectedDay() + ')' : '(month)' }}
+          <span *ngIf="selectedMerchantMonth() !== null" class="muted">
+            • {{ selectedMerchantMonth() }}
+          </span>
+        </div>
+        <div class="panel-sub" *ngIf="selectedMerchantMonth() === null">Click a merchant to drill down</div>
+        <div class="panel-sub" *ngIf="selectedMerchantMonth() !== null">
+          Receipts for this merchant in {{ monthLabel() }}{{ selectedDay() ? ' (Day ' + selectedDay() + ')' : '' }}
+        </div>
+      </div>
+
+      <div class="hint">
+        <button *ngIf="selectedMerchantMonth() !== null" mat-stroked-button (click)="clearMerchantMonth()">
+          <mat-icon>arrow_back</mat-icon>
+          Back
+        </button>
+      </div>
+    </div>
+
+    <!-- Summary list -->
+    <!-- Summary list (MONTHLY) -->
+    <ng-container *ngIf="selectedMerchantMonth() === null">
+      <div *ngIf="merchantCountsMonth().length === 0" class="empty">
+        No data for this month/day.
+      </div>
+
+      <div *ngIf="merchantCountsMonth().length > 0" class="merchant-scroll">
+        <div *ngFor="let m of merchantCountsMonth()" class="row">
+          <div class="row-left">
+            <button mat-stroked-button class="merchant-btn" (click)="selectMerchantMonth(m.name)">
+              {{ m.name }}
+            </button>
+            <span class="muted">{{ m.count }} receipts</span>
+          </div>
+
+          <mat-progress-bar [value]="(m.count / maxMerchantCountMonth()) * 100"></mat-progress-bar>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Drilldown table -->
+    <ng-container *ngIf="selectedMerchantMonth() !== null">
+      <div *ngIf="merchantReceiptsMonth().length === 0" class="empty">
+        No receipts found for this merchant in the current filter.
+      </div>
+
+      <div *ngIf="merchantReceiptsMonth().length > 0" class="table-wrap">
+        <table class="table table-even">
+          <colgroup>
+            <col class="col-id" />
+            <col class="col-status" />
+            <col class="col-date" />
+            <col class="col-total" />
+            <col class="col-actions" />
+          </colgroup>
+
+          <thead>
+            <tr>
+              <th>Receipt No</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Total</th>
+              <th class="actions-col">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let r of merchantReceiptsMonth(); let i = index">
+              <td>
+                {{ receiptNumberFor(merchantReceiptsMonth(), i) }}
+              </td>
+              <td><span [class]="badgeClass(r.status)">{{ r.status }}</span></td>
+              <td>{{ displayDate(r) }}</td>
+              <td>${{ (r.total ?? 0) | number:'1.2-2' }}</td>
+              <td class="actions-col">
+                <button mat-stroked-button (click)="openReceipt(r.id)">
+                  <mat-icon>open_in_new</mat-icon>
+                  Details
+                </button>
+                <button mat-stroked-button (click)="deleteReceipt(r.id)">
+                  <mat-icon>delete</mat-icon>
+                  Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="muted" style="margin-top:10px;">
+          Showing {{ merchantReceiptsMonth().length }} receipts.
+        </div>
+      </div>
+    </ng-container>
+  </mat-card>
+</div>

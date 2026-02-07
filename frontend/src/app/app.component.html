@@ -1,0 +1,55 @@
+<!-- ✅ NO <head> tag in Angular templates -->
+
+<!-- BLANK layout: ONLY the routed page -->
+<ng-container *ngIf="isBlank(); else mainShell">
+  <router-outlet></router-outlet>
+</ng-container>
+
+<!-- MAIN layout: your normal app chrome + routed page -->
+<ng-template #mainShell>
+  <mat-sidenav-container class="shell">
+    <mat-sidenav mode="side" opened class="nav">
+      <div class="brand">
+        <mat-icon>receipt_long</mat-icon>
+        <div>
+          <div class="title">Receipt Buddy</div>
+          <div class="subtitle">AI-powered receipt insights</div>
+        </div>
+      </div>
+
+      <mat-nav-list>
+        <a mat-list-item routerLink="/dashboard" routerLinkActive="active">
+          <mat-icon matListItemIcon>dashboard</mat-icon>
+          <span matListItemTitle>Dashboard</span>
+        </a>
+
+        <a mat-list-item routerLink="/upload" routerLinkActive="active">
+          <mat-icon matListItemIcon>cloud_upload</mat-icon>
+          <span matListItemTitle>Upload</span>
+        </a>
+
+        <a mat-list-item routerLink="/receipts" routerLinkActive="active">
+          <mat-icon matListItemIcon>list</mat-icon>
+          <span matListItemTitle>Receipts</span>
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <mat-toolbar color="primary" class="topbar">
+        <button mat-icon-button (click)="snack('Tip: Upload a receipt → open details → see AI insights')">
+          <mat-icon>tips_and_updates</mat-icon>
+        </button>
+
+        <span class="spacer"></span>
+      </mat-toolbar>
+
+      <mat-progress-bar *ngIf="loading.isLoading()" mode="indeterminate"></mat-progress-bar>
+
+      <main class="content">
+        <!-- ✅ THE ONLY outlet for main layout -->
+        <router-outlet></router-outlet>
+      </main>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</ng-template>

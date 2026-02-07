@@ -1,0 +1,133 @@
+<!-- ===================== RECEIPT DETAILS ===================== -->
+
+<!-- Loading / Error -->
+<div class="panel" *ngIf="loading()">Loading...</div>
+<div class="panel" *ngIf="!loading() && error()">{{ error() }}</div>
+
+<div *ngIf="!loading() && receipt() as r">
+  <!-- SECTION HEAD -->
+  <div class="section-head">
+    <div>
+      <div class="section-title">Receipt details</div>
+      <div class="section-sub">
+        <span class="badge" [class]="badgeClass(r.status)">{{ r.status }}</span>
+        <span class="muted" style="margin-left:10px;">
+          {{ r.merchantRaw ?? '—' }} • {{ displayDate(r) }}
+        </span>
+      </div>
+    </div>
+
+    <div class="head-actions">
+      <button mat-stroked-button (click)="openReceiptImage(r.id)">
+        <mat-icon>open_in_new</mat-icon>
+        Image
+      </button>
+
+      <button mat-stroked-button class="danger-btn" (click)="deleteReceipt(r.id)">
+        <mat-icon>delete</mat-icon>
+        Delete
+      </button>
+    </div>
+  </div>
+
+  <!-- KPI ROW -->
+  <div class="grid">
+    <mat-card class="kpi">
+      <div class="kpi-title">Total</div>
+      <div class="kpi-value">${{ (r.total ?? 0) | number:'1.2-2' }}</div>
+      <div class="kpi-sub">Receipt total</div>
+    </mat-card>
+
+    <mat-card class="kpi">
+      <div class="kpi-title">Subtotal</div>
+      <div class="kpi-value">${{ (r.subtotal ?? 0) | number:'1.2-2' }}</div>
+      <div class="kpi-sub">Before tax</div>
+    </mat-card>
+
+    <mat-card class="kpi">
+      <div class="kpi-title">Tax</div>
+      <div class="kpi-value">${{ (r.tax ?? 0) | number:'1.2-2' }}</div>
+      <div class="kpi-sub">Applied tax</div>
+    </mat-card>
+
+    <!-- SUMMARY PANEL -->
+    <mat-card class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Merchant and Date</div>
+        </div>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-item">
+          <div class="label">Merchant</div>
+          <div class="value">{{ r.merchantRaw ?? '—' }}</div>
+        </div>
+
+        <div class="summary-item">
+          <div class="label">Date</div>
+          <div class="value">{{ displayDate(r) }}</div>
+        </div>
+      </div>
+
+      <div *ngIf="r.errorMessage" class="error-box">
+        <div class="panel-title" style="margin-bottom:6px;">Error</div>
+        <pre>{{ r.errorMessage }}</pre>
+      </div>
+    </mat-card>
+
+    <!-- ITEMS PANEL -->
+    <mat-card class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Items</div>
+          <div class="panel-sub">Line items extracted from the receipt</div>
+        </div>
+      </div>
+
+      <div *ngIf="r.items && r.items.length; else noItems" class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Qty</th>
+              <th>Unit Price</th>
+              <th>Line Total</th>
+              <th>Category</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let it of r.items">
+              <td class="left">{{ it.description }}</td>
+              <td>{{ it.quantity ?? '—' }}</td>
+              <td>${{ (it.unitPrice ?? 0) | number:'1.2-2' }}</td>
+              <td>${{ (it.lineTotal ?? 0) | number:'1.2-2' }}</td>
+              <td>{{ it.category ?? '—' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #noItems>
+        <div class="empty">No items extracted.</div>
+      </ng-template>
+    </mat-card>
+
+    <!-- RAW TEXT PANEL -->
+    <mat-card class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Extracted Text</div>
+          <div class="panel-sub">Raw extracted text (debug)</div>
+        </div>
+
+        <button mat-stroked-button (click)="showRawText.set(!showRawText())">
+          {{ showRawText() ? 'Hide' : 'Show' }}
+        </button>
+      </div>
+
+      <pre class="raw-text" *ngIf="showRawText()">{{ r.rawText ?? '—' }}</pre>
+      <div class="empty" *ngIf="!showRawText()">Hidden</div>
+    </mat-card>
+  </div>
+</div>

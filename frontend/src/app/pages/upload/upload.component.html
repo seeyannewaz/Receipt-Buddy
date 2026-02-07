@@ -1,0 +1,107 @@
+<!-- ===================== UPLOAD PAGE ===================== -->
+<div class="upload-shell">
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-title">Upload a receipt</div>
+      <div class="hero-sub">
+        Upload an image here - the app will analyze it and generate insights.
+      </div>
+
+      <div class="hero-actions">
+        <!-- Hidden input + nice button -->
+        <input #fileInput type="file" accept="image/*" (change)="onFileChange($event)" [disabled]="uploading()"
+          class="file-input" />
+
+        <button class="btn btn-primary" type="button" (click)="fileInputRef.nativeElement.click()"
+          [disabled]="uploading()">
+          <span class="icon">⬆</span>
+          Choose image
+        </button>
+
+        <button class="btn btn-ghost" type="button" (click)="clearSelection()" [disabled]="uploading()"
+          *ngIf="previewUrl()">
+          Clear
+        </button>
+      </div>
+
+      <div class="status-row">
+        <span class="pill" *ngIf="uploading()">{{ message() || 'Working…' }}</span>
+        <span class="pill ok" *ngIf="!uploading() && lastReceipt()">Last upload saved</span>
+        <span class="muted" *ngIf="!uploading() && !lastReceipt()">No uploads yet</span>
+      </div>
+    </div>
+
+    <!-- Preview card -->
+    <div class="hero-right">
+      <div class="preview-card" [class.preview-empty]="!previewUrl()">
+        <ng-container *ngIf="previewUrl(); else emptyPreview">
+          <a [href]="previewUrl()" target="_blank" rel="noopener noreferrer" class="preview-link">
+            <img [src]="previewUrl()" alt="receipt preview" class="preview-img" />
+          </a>
+        </ng-container>
+
+        <ng-template #emptyPreview>
+          <div class="preview-empty-state">
+            <div class="preview-icon">🧾</div>
+            <div class="preview-title">Preview</div>
+            <div class="preview-sub">Your receipt image will appear here.</div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+  <!-- Drop zone -->
+  <div class="dropzone" [class.dropzone-disabled]="uploading()" [class.dropzone-active]="dragOver()"
+    (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+    <div class="dropzone-inner">
+      <!-- <div class="dropzone-badge">Drag & Drop</div> -->
+      <div class="dropzone-title">You can also drag and drop your receipt image here</div>
+      <!-- <div class="dropzone-sub">
+        PNG / JPG / HEIC supported (whatever the browser can upload)
+      </div> -->
+
+      <div class="dropzone-hint" *ngIf="uploading()">
+        <div class="fake-progress">
+          <div class="fake-progress-bar"></div>
+        </div>
+        <div class="muted">Processing will continue in the background.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Last receipt card -->
+  <div *ngIf="lastReceipt() as r" class="result-card">
+    <div class="result-head">
+      <div>
+        <div class="result-title">Last receipt</div>
+      </div>
+
+      <div class="result-right">
+        <span class="badge" [class]="badgeClass(r.status)">{{ r.status }}</span>
+        <a class="link" [attr.href]="receiptWindowHref(r.id)" target="_blank" rel="noopener noreferrer"
+          [hidden]="uploading()">
+          Open details ↗
+        </a>
+      </div>
+    </div>
+
+    <div class="result-body">
+      <div class="mini">
+        <div class="mini-label">Message</div>
+        <div class="mini-value">{{ r.status || '—' }}</div>
+      </div>
+
+      <div class="mini">
+        <div class="mini-label">Tip</div>
+        <div class="mini-value">Open details to see items, totals, merchant, and AI insights.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message fallback -->
+  <div *ngIf="!lastReceipt() && message()" class="message-card">
+    <div class="muted">{{ message() }}</div>
+  </div>
+</div>
