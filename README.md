@@ -20,9 +20,13 @@ Before you begin, ensure you have the following installed:
 
 - PostgreSQL (for database, can be managed by Docker as well).
 
+- An OpenAI API key
+
 ## Steps for running the app:
 
 - Clone the repository
+
+- Replace ```OPENAI_API_KEY``` in ```${OPENAI_API_KEY}``` with your API key in ```docker-compose.yml``` file in the project root, and application.properties file under ```backend/src/main/resources/```. 
 
 ### Running the application using Docker:
 
