@@ -1,0 +1,51 @@
+services:
+  db:
+    image: postgres:16
+    container_name: receipt-buddy-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: receipt_buddy
+      POSTGRES_USER: receipts
+      POSTGRES_PASSWORD: receipts
+    ports:
+      - "5433:5432"
+    volumes:
+      - receipt_buddy_pgdata:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+    container_name: receipt-buddy-backend
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      # DB: use service name "db" inside docker network
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/receipt_buddy
+      SPRING_DATASOURCE_USERNAME: receipts
+      SPRING_DATASOURCE_PASSWORD: receipts
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+      # uploads persisted in a volume
+      APP_UPLOAD_DIR: /data/uploads
+
+      # OpenAI key (kept in shell env, not committed)
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    ports:
+      - "8080:8080"
+    volumes:
+      - receipt_buddy_uploads:/data/uploads
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: receipt-buddy-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "4200:80"
+
+volumes:
+  receipt_buddy_pgdata:
+  receipt_buddy_uploads:
