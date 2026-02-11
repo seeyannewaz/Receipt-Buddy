@@ -1,6 +1,6 @@
 # Receipt Buddy: AI-powered Receipt Insights
 
-**Receipt Buddy** is a full-stack web app that allows users to upload receipts. Once the receipts are uploaded, the app uses an AI to analyze and parse the receipts to generate insights and track expenditure all-time or monthly. The application consists of a backend, frontend and a PostgreSQL database, with all components running in separate Docker containers.
+**Receipt Buddy** is a full-stack, intelligent web app that allows users to upload receipts. Once the receipts are uploaded, the app uses AI to analyze and parse the receipts to generate all-time/monthly insights, real-time data visualization and spending trends. The application consists of a backend, frontend and a PostgreSQL database, with all components running in separate Docker containers.
 
 ## Prerequisites
 
@@ -166,4 +166,5 @@ Make syre you have PostgreSQL installed locally. If so, you need to create the r
     ```
 
     The frontend should now be running at http://localhost:4200.
+
 
