@@ -1,14 +1,18 @@
-<!-- ✅ NO <head> tag in Angular templates -->
-
 <!-- BLANK layout: ONLY the routed page -->
 <ng-container *ngIf="isBlank(); else mainShell">
   <router-outlet></router-outlet>
 </ng-container>
 
-<!-- MAIN layout: your normal app chrome + routed page -->
+<!-- MAIN layout: app chrome + routed page -->
 <ng-template #mainShell>
-  <mat-sidenav-container class="shell">
-    <mat-sidenav mode="side" opened class="nav">
+  <mat-sidenav-container class="shell" [hasBackdrop]="isHandset()">
+    <mat-sidenav
+      #sidenav
+      class="nav"
+      [mode]="isHandset() ? 'over' : 'side'"
+      [opened]="!isHandset()"
+      [fixedInViewport]="isHandset()"
+    >
       <div class="brand">
         <mat-icon>receipt_long</mat-icon>
         <div>
@@ -37,6 +41,20 @@
 
     <mat-sidenav-content>
       <mat-toolbar color="primary" class="topbar">
+        <button
+          *ngIf="isHandset()"
+          mat-icon-button
+          aria-label="Open navigation"
+          (click)="sidenav.toggle()"
+        >
+          <mat-icon>menu</mat-icon>
+        </button>
+
+        <div *ngIf="isHandset()" class="topbar-brand">
+          <mat-icon class="topbar-brand-icon">receipt_long</mat-icon>
+          <span class="topbar-brand-text">Receipt Buddy</span>
+        </div>
+
         <button mat-icon-button (click)="snack('Tip: Upload a receipt → open details → see AI insights')">
           <mat-icon>tips_and_updates</mat-icon>
         </button>
@@ -47,7 +65,6 @@
       <mat-progress-bar *ngIf="loading.isLoading()" mode="indeterminate"></mat-progress-bar>
 
       <main class="content">
-        <!-- ✅ THE ONLY outlet for main layout -->
         <router-outlet></router-outlet>
       </main>
     </mat-sidenav-content>

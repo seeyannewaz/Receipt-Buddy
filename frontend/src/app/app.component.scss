@@ -1,10 +1,13 @@
 .shell {
     height: 100vh;
+    // Fallback for iOS Safari dynamic toolbars
+    height: 100dvh;
 }
 
 .nav {
     width: 280px;
     padding: 12px;
+    box-sizing: border-box;
 }
 
 .brand {
@@ -30,12 +33,39 @@
     position: sticky;
     top: 0;
     z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.topbar-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 16px;
+    margin-left: 2px;
+}
+
+.topbar-brand-icon {
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+    line-height: 22px;
+}
+
+.topbar-brand-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 58vw;
 }
 
 .content {
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
+    box-sizing: border-box;
 }
 
 .spacer {
@@ -44,4 +74,22 @@
 
 a.active {
     border-radius: 12px;
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 959.98px) {
+    .nav {
+        // Cap drawer width so it never covers the full screen on phones.
+        width: min(85vw, 300px);
+    }
+
+    .content {
+        padding: 14px 12px 22px;
+    }
+}
+
+@media (max-width: 520px) {
+    .content {
+        padding: 12px 10px 20px;
+    }
 }

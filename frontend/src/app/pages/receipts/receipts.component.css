@@ -305,3 +305,54 @@
         min-width: 760px;
     }
 }
+
+@media (max-width: 520px) {
+    :host {
+        padding: 4px 0 20px;
+    }
+
+    .section-head {
+        padding: 12px;
+        border-radius: 16px;
+    }
+
+    .section-title {
+        font-size: 16px;
+    }
+
+    .head-actions {
+        width: 100%;
+    }
+
+    .head-actions button[mat-stroked-button] {
+        flex: 1 1 auto;
+    }
+
+    .panel {
+        padding: 14px;
+        border-radius: 16px;
+    }
+
+    .filter-right {
+        width: 100%;
+    }
+
+    .month-select {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .panel-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .actions-col {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .actions-col button[mat-stroked-button] {
+        flex: 1 1 auto;
+    }
+}

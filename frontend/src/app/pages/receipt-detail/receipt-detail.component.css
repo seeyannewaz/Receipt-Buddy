@@ -310,4 +310,50 @@
     flex-direction: column;
     align-items: flex-start;
   }
+
+  .kpi-value {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 520px) {
+  :host {
+    padding: 4px 0 20px;
+  }
+
+  .grid {
+    gap: 12px;
+  }
+
+  .section-head {
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .section-title {
+    font-size: 16px;
+  }
+
+  .head-actions {
+    width: 100%;
+  }
+
+  .head-actions button[mat-stroked-button] {
+    flex: 1 1 auto;
+  }
+
+  .kpi,
+  .panel {
+    padding: 14px;
+    border-radius: 16px !important;
+  }
+
+  .kpi-value {
+    font-size: 26px;
+  }
+
+  .panel-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

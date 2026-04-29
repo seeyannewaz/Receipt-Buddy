@@ -34,5 +34,19 @@ body {
   // Reset the user agent margin.
   margin: 0;
   height: 100%;
+
+  // Prevent iOS auto-enlarging text when rotating to landscape.
+  -webkit-text-size-adjust: 100%;
+  // Avoid horizontal page scroll caused by soft-box shadows/gradients on phones.
+  overflow-x: hidden;
 }
+
+/* Make long words wrap by default on small screens so content never forces horizontal page scroll. */
+@media (max-width: 520px) {
+  body {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}
+
 /* You can add global styles to this file, and also import other style files */
